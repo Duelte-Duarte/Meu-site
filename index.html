@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Área do Aluno</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .login,
+        .videos {
+            margin-top: 50px;
+        }
+
+        iframe {
+            width: 80%;
+            height: 400px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login">
+        <h2>Login</h2>
+        <input type="text" id="user" placeholder="Usuário"><br><br>
+        <input type="password" id="pass" placeholder="Senha"><br><br>
+        <button onclick="login()">Entrar</button>
+        <p id="msg"></p>
+    </div>
+
+    <div class="videos" style="display:none;">
+        <h2>Vídeos</h2>
+        <div id="listaVideos"></div>
+    </div>
+
+    <script>
+        async function login() {
+            const username = document.getElementById('user').value;
+            const password = document.getElementById('pass').value;
+
+            const res = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                document.querySelector('.login').style.display = 'none';
+                document.querySelector('.videos').style.display = 'block';
+                carregarVideos();
+            } else {
+                document.getElementById('msg').innerText = 'Login inválido';
+            }
+        }
+
+        async function carregarVideos() {
+            const res = await fetch('http://localhost:3000/videos');
+            const videos = await res.json();
+
+            const container = document.getElementById('listaVideos');
+            container.innerHTML = '';
+
+            videos.forEach(v => {
+                container.innerHTML += `<h3>${v.title}</h3><iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>`;
+            });
+        }
+    </script>
+
+</body>
+
+</html>
