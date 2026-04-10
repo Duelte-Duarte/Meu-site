@@ -43,7 +43,7 @@
             const username = document.getElementById('user').value;
             const password = document.getElementById('pass').value;
 
-            const res = await fetch('http://localhost:3000/login', {
+            const res = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -61,7 +61,7 @@
         }
 
         async function carregarVideos() {
-            const res = await fetch('http://localhost:3000/videos');
+            const res = await fetch('/videos');
             const videos = await res.json();
 
             const container = document.getElementById('listaVideos');
