@@ -1,10 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// 👉 SERVIR ARQUIVOS HTML (IMPORTANTE)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Usuários fixos (simples)
 const users = [
@@ -14,10 +18,15 @@ const users = [
 
 // Lista de vídeos
 const videos = [
-  { title: 'Aula 1 - Introdução', url: 'https://www.youtube.com/watch?v=u4XcUVXQrlw' },
-  { title: 'Aula 2 - HTML Básico', url: 'https://www.youtube.com/watch?v=ITE-0WQOfnc' },
-  { title: 'Aula 3 - HTML Básico', url: 'https://www.youtube.com/watch?v=u4XcUVXQrlw' }
+  { title: 'Aula 1 - Introdução', url: 'https://www.youtube.com/embed/u4XcUVXQrlw' },
+  { title: 'Aula 2 - HTML Básico', url: 'https://www.youtube.com/embed/ITE-0WQOfnc' },
+  { title: 'Aula 3 - HTML Básico', url: 'https://www.youtube.com/embed/u4XcUVXQrlw' }
 ];
+
+// 👉 ROTA PRINCIPAL (RESOLVE SEU ERRO)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Login
 app.post('/login', (req, res) => {
@@ -31,7 +40,7 @@ app.post('/login', (req, res) => {
   }
 });
 
-// Rota protegida de vídeos
+// Rota de vídeos
 app.get('/videos', (req, res) => {
   res.json(videos);
 });
